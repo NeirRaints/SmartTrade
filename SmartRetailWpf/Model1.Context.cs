@@ -28,6 +28,5 @@ namespace SmartRetailWpf
         public virtual DbSet<тЗаказы> тЗаказы { get; set; }
         public virtual DbSet<тКлиенты> тКлиенты { get; set; }
         public virtual DbSet<тТовары> тТовары { get; set; }
-        public virtual DbSet<sysdiagrams> sysdiagrams { get; set; }
     }
 }

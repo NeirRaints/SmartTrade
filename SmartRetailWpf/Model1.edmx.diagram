@@ -10,7 +10,6 @@
         <EntityTypeShape EntityType="Торг_ОргModel.тТовары" Width="1.5" PointX="0.75" PointY="5.125" IsExpanded="true" />
         <AssociationConnector Association="Торг_ОргModel.FK_тЗаказы_тКлиенты" ManuallyRouted="false" />
         <AssociationConnector Association="Торг_ОргModel.FK_тЗаказы_тТовары" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="Торг_ОргModel.sysdiagrams" Width="1.5" PointX="3.375" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

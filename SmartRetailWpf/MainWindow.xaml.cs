@@ -7,6 +7,7 @@ using System.Windows.Media;
 using System.Collections.Generic;
 using System;
 using System.Globalization;
+using ToastNotifications.Messages;
 
 namespace SmartRetailWpf
 {
@@ -15,7 +16,8 @@ namespace SmartRetailWpf
     /// </summary>
     public partial class MainWindow : Window
     {
-        InputValidation Validation = new InputValidation();
+        readonly InputValidation Validation = new InputValidation();
+        readonly ToastNotificationManager manager = new ToastNotificationManager();
 
         public MainWindow()
         {
@@ -114,14 +116,14 @@ namespace SmartRetailWpf
             using (var entity = new SmartRetailEntities())
             {
                 // Получить данные о месячной выручке по неделям для выбранного месяца
-                DateTime startDateOfMonth = new DateTime(selectedDate.Year, selectedDate.Month, 1);
-                DateTime endDateOfMonth = startDateOfMonth.AddMonths(1).AddDays(-1);
-                var ordersForSelectedMonth = entity.тЗаказы.Where(order => order.Дата_покупки >= startDateOfMonth && order.Дата_покупки <= endDateOfMonth).ToList();
+                DateTime selectedMonth = new DateTime(selectedDate.Year, selectedDate.Month, 1);
+                DateTime endDateOfMonth = selectedMonth.AddMonths(1).AddDays(-1);
+                var ordersForSelectedMonth = entity.тЗаказы.Where(order => order.Дата_покупки >= selectedMonth && order.Дата_покупки <= endDateOfMonth).ToList();
                 Dictionary<string, decimal> weeklyRevenueData = RevenueCalculator.GetWeeklyRevenueByWeeks(ordersForSelectedMonth);
 
                 // Создать новый график
                 PlotProfit.Plot.Clear();
-                PlotProfit.Plot.Title("Месячная выручка");
+                PlotProfit.Plot.Title("Выручка за " + selectedMonth.ToString("MMMM"));
                 PlotProfit.Plot.XLabel("Неделя");
                 PlotProfit.Plot.YLabel("Выручка");
 
@@ -167,8 +169,9 @@ namespace SmartRetailWpf
                     decimal weeklyRevenue = RevenueCalculator.CalculateWeeklyRevenue(ordersForSelectedWeek, selectedDate);
                     WeeklyRevenueTxt.Text = RevenueCalculator.FormatRevenue(weeklyRevenue);
 
-                    // Обновить график для выбранной даты
-                    CreatePlot(SelectOrderDateCalendar.SelectedDate.Value);
+                    // Обновить график для выбранного месяца
+                    DateTime selectedMonth = new DateTime(SelectOrderDateCalendar.SelectedDate.Value.Year, SelectOrderDateCalendar.SelectedDate.Value.Month, 1);
+                    CreatePlot(selectedMonth);
                 }
             }
         }
@@ -280,7 +283,7 @@ namespace SmartRetailWpf
         // Удаление выделенной записи при нажатии на неё ПКМ
         private void OrdersDg_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var selectedOrder = OrdersDg.SelectedItem as тЗаказы;
+            var selectedOrder = (тЗаказы)OrdersDg.SelectedItem;
 
             if (selectedOrder != null)
             {
@@ -326,7 +329,7 @@ namespace SmartRetailWpf
         {
             if(OrdersDg.SelectedItem == null)
             {
-                MessageBox.Show("Выберите запись");
+                manager.ShowInformation("Выберите запись");
                 return;
             }
 
@@ -389,7 +392,7 @@ namespace SmartRetailWpf
 
             using (var entity = new SmartRetailEntities())
             {
-                if (entity.тЗаказы.Any(o => o.КодКлиента == clientCode && o.КодТовара == productCode && o.Дата_покупки == buyingDate))
+                if (entity.тЗаказы.Any(o => o.КодКлиента == clientCode && o.КодТовара == productCode && o.Дата_покупки == buyingDate && o.Количество == productCount))
                 {
                     EditOrderFormErrorTxt.Visibility = Visibility.Visible;
                     EditOrderFormErrorTxt.Text = "Такой заказ уже существует";
@@ -546,7 +549,7 @@ namespace SmartRetailWpf
         // Удаление выделенной записи при нажатии ПКМ в ClientsDg
         private void ClientsDg_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var selectedClient = ClientsDg.SelectedItem as тКлиенты;
+            var selectedClient = (тКлиенты)ClientsDg.SelectedItem;
 
             if (selectedClient != null)
             {
@@ -557,6 +560,15 @@ namespace SmartRetailWpf
                 {
                     using (var entity = new SmartRetailEntities())
                     {
+                        var orders = entity.тЗаказы.Where(o => o.КодКлиента == selectedClient.КодКлиента).ToList();
+                        if (orders != null)
+                        {
+                            foreach (var order in orders)
+                            {
+                                entity.тЗаказы.Remove(order);
+                            }
+                        }
+
                         // Прикрепляем объект к контексту, если он объект данных был отсоединен
                         entity.тКлиенты.Attach(selectedClient);
                         entity.тКлиенты.Remove(selectedClient);
@@ -565,6 +577,7 @@ namespace SmartRetailWpf
 
                     // Повторно загружаем данные для обновления DataGrid
                     LoadClientsData();
+                    LoadOrdersData();
                 }
             }
         }
@@ -574,7 +587,7 @@ namespace SmartRetailWpf
         {
             if(ClientsDg.SelectedItem == null)
             {
-                MessageBox.Show("Выберите запись");
+                manager.ShowInformation("Выберите запись");
                 return;
             }
             
@@ -765,7 +778,7 @@ namespace SmartRetailWpf
         // Удаление выделенной записи при нажатии ПКМ в ProductsDg
         private void ProductsDg_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            var selectedProduct = ProductsDg.SelectedItem as тТовары;
+            var selectedProduct = (тТовары)ProductsDg.SelectedItem;
 
             if (selectedProduct != null)
             {
@@ -776,6 +789,15 @@ namespace SmartRetailWpf
                 {
                     using (var entity = new SmartRetailEntities())
                     {
+                        var orders = entity.тЗаказы.Where(o => o.КодТовара == selectedProduct.КодТовара).ToList();
+                        if (orders != null)
+                        {
+                            foreach (var order in orders)
+                            {
+                                entity.тЗаказы.Remove(order);
+                            }
+                        }
+
                         // Прикрепляем объект к контексту, если он объект данных был отсоединен
                         entity.тТовары.Attach(selectedProduct);
                         entity.тТовары.Remove(selectedProduct);
@@ -784,6 +806,7 @@ namespace SmartRetailWpf
 
                     // Повторно загружаем данные для обновления DataGrid
                     LoadProductsData();
+                    LoadOrdersData();
                 }
             }
         }
@@ -793,7 +816,7 @@ namespace SmartRetailWpf
         {
             if(ProductsDg.SelectedItem == null)
             {
-                MessageBox.Show("Выберите запись");
+                manager.ShowInformation("Выберите запись");
                 return;
             }
 
@@ -849,7 +872,7 @@ namespace SmartRetailWpf
 
             using (var entity = new SmartRetailEntities())
             {
-                var searchingProduct = entity.тТовары.FirstOrDefault(product => product.Наименование == productName);
+                var searchingProduct = entity.тТовары.FirstOrDefault(product => product.Наименование == productName && product.Цена == price && product.НаСкладе == stock);
 
                 if (searchingProduct != null)
                 {
@@ -925,6 +948,17 @@ namespace SmartRetailWpf
         private void OnlyCyrillicLetters_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             e.Handled = !Validation.ValidateOnlyCyrillicLetters(sender, e);
+        }
+
+        // Ограничение копирования, вставки
+        private void TextBox_PreviewExecuted(object sender, ExecutedRoutedEventArgs e) 
+        {
+            if (e.Command == ApplicationCommands.Copy ||
+                e.Command == ApplicationCommands.Cut ||
+                e.Command == ApplicationCommands.Paste)
+            {
+                e.Handled = true;
+            }
         }
     }
 }

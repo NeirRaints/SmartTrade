@@ -27,11 +27,11 @@
                     <TextBlock Text="Добавить заказ" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
                 </Border>
                 <TextBlock Text="Код клиента" Margin="5,10,5,0"/>
-                <ComboBox x:Name="ClientsCodesBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
+                <ComboBox x:Name="ClientsCodesBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus" MaxDropDownHeight="60"/>
                 <TextBlock Text="Код товара" Margin="5,0,5,0"/>
-                <ComboBox x:Name="ProductsCodesBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
+                <ComboBox x:Name="ProductsCodesBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus" MaxDropDownHeight="60"/>
                 <TextBlock Text="Количество" Margin="5,0,5,0"/>
-                <TextBox x:Name="ProductsCount" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="4" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="ProductsCount" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="4" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Дата покупки" Margin="5,0,5,0"/>
                 <DatePicker x:Name="BuyingDate" Margin="5,0,5,5" DisplayDateEnd="{x:Static sys:DateTime.Now}" Focusable="False" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
                 <TextBlock x:Name="AddOrderFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
@@ -56,7 +56,7 @@
                 <TextBlock Text="Код товара" Margin="5,0,5,0"/>
                 <ComboBox x:Name="EditOrdProductCodeBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus"/>
                 <TextBlock Text="Количество" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditOrdCountBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="4" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditOrdCountBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="4" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Дата покупки" Margin="5,0,5,0"/>
                 <DatePicker x:Name="EditOrdBuyDate" Margin="5,0,5,5" DisplayDateEnd="{x:Static sys:DateTime.Now}" Focusable="False" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus"/>
                 <TextBlock x:Name="EditOrderFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
@@ -75,13 +75,13 @@
                     <TextBlock Text="Добавить клиента" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
                 </Border>
                 <TextBlock Text="Фамилия" Margin="5,10,5,0"/>
-                <TextBox x:Name="SurnameBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" MaxLength="50" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="SurnameBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" MaxLength="50" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Адрес" Margin="5,0,5,0"/>
-                <TextBox x:Name="AddressBx" Margin="5,0,5,5" Height="20" MaxLength="140" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="AddressBx" Margin="5,0,5,5" Height="20" MaxLength="140" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Телефон" Margin="5,0,5,0"/>
-                <TextBox x:Name="PhoneBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="11" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="PhoneBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="11" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Email" Margin="5,0,5,0"/>
-                <TextBox x:Name="EmailBx" Margin="5,0,5,5" Height="20" MaxLength="128" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EmailBx" Margin="5,0,5,5" Height="20" MaxLength="128" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock x:Name="AddClientFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
                 <Button x:Name="AddClientFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="AddClientFormBtn_Click"/>
             </StackPanel>
@@ -100,13 +100,13 @@
                 <TextBlock Text="Код клиента" Margin="5,10,5,0"/>
                 <TextBox x:Name="EditClientCodeBx" Margin="5,0,5,5" Height="20" IsReadOnly="True"/>
                 <TextBlock Text="Фамилия" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditSurnameBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" MaxLength="50" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditSurnameBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" MaxLength="50" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Адрес" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditAddressBx" Margin="5,0,5,5" Height="20" MaxLength="140" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditAddressBx" Margin="5,0,5,5" Height="20" MaxLength="140" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Телефон" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditPhoneBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="11" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditPhoneBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="11" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Email" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditEmailBx" Margin="5,0,5,5" Height="20" MaxLength="128" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditEmailBx" Margin="5,0,5,5" Height="20" MaxLength="128" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock x:Name="EditClientFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
                 <Button x:Name="EditClientFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="EditClientFormBtn_Click"/>
             </StackPanel>
@@ -123,11 +123,11 @@
                     <TextBlock Text="Добавить товар" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
                 </Border>
                 <TextBlock Text="Наименование" Margin="5,10,5,0"/>
-                <TextBox x:Name="ProductNameBx" Margin="5,0,5,5" Height="20" MaxLength="50" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="ProductNameBx" Margin="5,0,5,5" Height="20" MaxLength="50" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Цена" Margin="5,0,5,0"/>
-                <TextBox x:Name="PriceBx" Margin="5,0,5,5" Height="20" MaxLength="17" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="PriceBx" Margin="5,0,5,5" Height="20" MaxLength="13" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="На складе" Margin="5,0,5,0"/>
-                <TextBox x:Name="StockBx" Margin="5,0,5,5" Height="20" MaxLength="4" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="StockBx" Margin="5,0,5,5" Height="20" MaxLength="4" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock x:Name="AddProductFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
                 <Button x:Name="AddProductFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="AddProductFormBtn_Click"/>
             </StackPanel>
@@ -146,11 +146,11 @@
                 <TextBlock Text="Код товара" Margin="5,10,5,0"/>
                 <TextBox x:Name="EditProductCode" Margin="5,0,5,5" Height="20" IsReadOnly="True"/>
                 <TextBlock Text="Наименование" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditProductNameBx" Margin="5,0,5,5" Height="20" MaxLength="50" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditProductNameBx" Margin="5,0,5,5" Height="20" MaxLength="50" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="Цена" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditPriceBx" Margin="5,0,5,5" Height="20" MaxLength="17" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditPriceBx" Margin="5,0,5,5" Height="20" MaxLength="13" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock Text="На складе" Margin="5,0,5,0"/>
-                <TextBox x:Name="EditStockBx" Margin="5,0,5,5" Height="20" MaxLength="4" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus"/>
+                <TextBox x:Name="EditStockBx" Margin="5,0,5,5" Height="20" MaxLength="4" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus" CommandManager.PreviewExecuted="TextBox_PreviewExecuted" ContextMenu="{x:Null}"/>
                 <TextBlock x:Name="EditProductFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
                 <Button x:Name="EditProductFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="EditProductFormBtn_Click"/>
             </StackPanel>
@@ -319,7 +319,7 @@
                             <Border.Effect>
                                 <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
                             </Border.Effect>
-                            <Calendar x:Name="SelectOrderDateCalendar" VerticalAlignment="Center" BorderBrush="{x:Null}" SelectedDatesChanged="SelectOrderDateCalendar_SelectedDatesChanged">
+                            <Calendar x:Name="SelectOrderDateCalendar" VerticalAlignment="Center" BorderBrush="{x:Null}" DisplayDateEnd="{x:Static sys:DateTime.Now}" SelectedDatesChanged="SelectOrderDateCalendar_SelectedDatesChanged">
                                 <Calendar.LayoutTransform>
                                     <TransformGroup>
                                         <ScaleTransform ScaleX="1.7" ScaleY="1.7"/>
