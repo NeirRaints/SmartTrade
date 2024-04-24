@@ -1,0 +1,456 @@
+﻿<Window x:Class="SmartRetailWpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib" 
+        xmlns:s="clr-namespace:ScottPlot.WPF;assembly=ScottPlot.WPF"
+        mc:Ignorable="d"
+        Height="1080" Width="1280" WindowStartupLocation="CenterScreen" Title="Smart Trade" ResizeMode="NoResize" MinHeight="1080" MaxHeight="1080" MinWidth="1280" MaxWidth="1280">
+    
+    <Window.Resources>
+        <LinearGradientBrush x:Key="GradientBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#FF94A0FF" Offset="0" />
+            <GradientStop Color="#FF6577FD" Offset="1" />
+        </LinearGradientBrush>
+    </Window.Resources>
+
+    <Grid>
+        <!--Форма добавления заказа-->
+        <Border x:Name="AddOrderBg" Background="#19000000" Panel.ZIndex="1" MouseLeftButtonDown="AddOrderBg_MouseLeftButtonDown" Visibility="Collapsed"/>
+        <Border x:Name="AddOrderForm" Background="White" CornerRadius="10" Height="260" Width="300" Panel.ZIndex="2" Visibility="Collapsed">
+            <StackPanel Orientation="Vertical">
+                <Border Background="#FF4759E4" Height="35">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                    </Border.Effect>
+                    <TextBlock Text="Добавить заказ" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
+                </Border>
+                <TextBlock Text="Код клиента" Margin="5,10,5,0"/>
+                <ComboBox x:Name="ClientsCodesBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Код товара" Margin="5,0,5,0"/>
+                <ComboBox x:Name="ProductsCodesBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Количество" Margin="5,0,5,0"/>
+                <TextBox x:Name="ProductsCount" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="4" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Дата покупки" Margin="5,0,5,0"/>
+                <DatePicker x:Name="BuyingDate" Margin="5,0,5,5" DisplayDateEnd="{x:Static sys:DateTime.Now}" Focusable="False" GotFocus="ChangeAddOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock x:Name="AddOrderFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
+                <Button x:Name="AddOrderFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="AddOrderFormBtn_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!--Форма редактирования заказа-->
+        <Border x:Name="EditOrderBg" Background="#19000000" Panel.ZIndex="1" MouseLeftButtonDown="EditOrderBg_MouseLeftButtonDown" Visibility="Collapsed"/>
+        <Border x:Name="EditOrderForm" Background="White" CornerRadius="10" Height="300" Width="300" Panel.ZIndex="2" Visibility="Collapsed">
+            <StackPanel Orientation="Vertical">
+                <Border Background="#FF4759E4" Height="35">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                    </Border.Effect>
+                    <TextBlock Text="Редактировать заказ" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
+                </Border>
+                <TextBlock Text="Код заказа" Margin="5,10,5,0"/>
+                <TextBox x:Name="EditOrdOrderCodeBx" Margin="5,0,5,5" Height="20" IsReadOnly="True"/>
+                <TextBlock Text="Код клиента" Margin="5,0,5,0"/>
+                <ComboBox x:Name="EditOrdClientCodeBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Код товара" Margin="5,0,5,0"/>
+                <ComboBox x:Name="EditOrdProductCodeBox" Margin="5,0,5,5" Height="20" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Количество" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditOrdCountBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="4" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Дата покупки" Margin="5,0,5,0"/>
+                <DatePicker x:Name="EditOrdBuyDate" Margin="5,0,5,5" DisplayDateEnd="{x:Static sys:DateTime.Now}" Focusable="False" GotFocus="ChangeEditOrderErrorTxtVisibility_GotFocus"/>
+                <TextBlock x:Name="EditOrderFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
+                <Button x:Name="SumbitOrdEdit" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="SumbitOrdEdit_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!--Форма добавления клиента-->
+        <Border x:Name="AddClientBg" Background="#19000000" Panel.ZIndex="1" MouseLeftButtonDown="AddClientBg_MouseLeftButtonDown" Visibility="Collapsed"/>
+        <Border x:Name="AddClientForm" Background="White" CornerRadius="10" Height="260" Width="300" Panel.ZIndex="2" Visibility="Collapsed">
+            <StackPanel Orientation="Vertical">
+                <Border Background="#FF4759E4" Height="35">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                    </Border.Effect>
+                    <TextBlock Text="Добавить клиента" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
+                </Border>
+                <TextBlock Text="Фамилия" Margin="5,10,5,0"/>
+                <TextBox x:Name="SurnameBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" MaxLength="50" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Адрес" Margin="5,0,5,0"/>
+                <TextBox x:Name="AddressBx" Margin="5,0,5,5" Height="20" MaxLength="140" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Телефон" Margin="5,0,5,0"/>
+                <TextBox x:Name="PhoneBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="11" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Email" Margin="5,0,5,0"/>
+                <TextBox x:Name="EmailBx" Margin="5,0,5,5" Height="20" MaxLength="128" GotFocus="ChangeAddClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock x:Name="AddClientFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
+                <Button x:Name="AddClientFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="AddClientFormBtn_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!--Форма редактирования клиента-->
+        <Border x:Name="EditClientBg" Background="#19000000" Panel.ZIndex="1" MouseLeftButtonDown="EditClientBg_MouseLeftButtonDown" Visibility="Collapsed"/>
+        <Border x:Name="EditClientForm" Background="White" CornerRadius="10" Height="300" Width="300" Panel.ZIndex="2" Visibility="Collapsed">
+            <StackPanel Orientation="Vertical">
+                <Border Background="#FF4759E4" Height="35">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                    </Border.Effect>
+                    <TextBlock Text="Редактировать клиента" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
+                </Border>
+                <TextBlock Text="Код клиента" Margin="5,10,5,0"/>
+                <TextBox x:Name="EditClientCodeBx" Margin="5,0,5,5" Height="20" IsReadOnly="True"/>
+                <TextBlock Text="Фамилия" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditSurnameBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" MaxLength="50" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Адрес" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditAddressBx" Margin="5,0,5,5" Height="20" MaxLength="140" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Телефон" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditPhoneBx" Margin="5,0,5,5" Height="20" PreviewTextInput="OnlyNumbers_PreviewTextInput" MaxLength="11" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Email" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditEmailBx" Margin="5,0,5,5" Height="20" MaxLength="128" GotFocus="ChangeEditClientErrorTxtVisibility_GotFocus"/>
+                <TextBlock x:Name="EditClientFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
+                <Button x:Name="EditClientFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="EditClientFormBtn_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!--Форма добавления товара-->
+        <Border x:Name="AddProductBg" Background="#19000000" Panel.ZIndex="1" MouseLeftButtonDown="AddProductBg_MouseLeftButtonDown" Visibility="Collapsed"/>
+        <Border x:Name="AddProductForm" Background="White" CornerRadius="10" Height="220" Width="300" Panel.ZIndex="2" Visibility="Collapsed">
+            <StackPanel Orientation="Vertical">
+                <Border Background="#FF4759E4" Height="35">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                    </Border.Effect>
+                    <TextBlock Text="Добавить товар" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
+                </Border>
+                <TextBlock Text="Наименование" Margin="5,10,5,0"/>
+                <TextBox x:Name="ProductNameBx" Margin="5,0,5,5" Height="20" MaxLength="50" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Цена" Margin="5,0,5,0"/>
+                <TextBox x:Name="PriceBx" Margin="5,0,5,5" Height="20" MaxLength="17" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="На складе" Margin="5,0,5,0"/>
+                <TextBox x:Name="StockBx" Margin="5,0,5,5" Height="20" MaxLength="4" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeAddProductErrorTxtVisibility_GotFocus"/>
+                <TextBlock x:Name="AddProductFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
+                <Button x:Name="AddProductFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="AddProductFormBtn_Click"/>
+            </StackPanel>
+        </Border>
+
+        <!--Форма редактирования товара-->
+        <Border x:Name="EditProductBg" Background="#19000000" Panel.ZIndex="1" MouseLeftButtonDown="EditProductBg_MouseLeftButtonDown" Visibility="Collapsed"/>
+        <Border x:Name="EditProductForm" Background="White" CornerRadius="10" Height="260" Width="300" Panel.ZIndex="2" Visibility="Collapsed">
+            <StackPanel Orientation="Vertical">
+                <Border Background="#FF4759E4" Height="35">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                    </Border.Effect>
+                    <TextBlock Text="Редактировать товар" FontSize="22" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Helvetica"/>
+                </Border>
+                <TextBlock Text="Код товара" Margin="5,10,5,0"/>
+                <TextBox x:Name="EditProductCode" Margin="5,0,5,5" Height="20" IsReadOnly="True"/>
+                <TextBlock Text="Наименование" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditProductNameBx" Margin="5,0,5,5" Height="20" MaxLength="50" PreviewTextInput="OnlyCyrillicLetters_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="Цена" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditPriceBx" Margin="5,0,5,5" Height="20" MaxLength="17" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus"/>
+                <TextBlock Text="На складе" Margin="5,0,5,0"/>
+                <TextBox x:Name="EditStockBx" Margin="5,0,5,5" Height="20" MaxLength="4" PreviewTextInput="OnlyNumbers_PreviewTextInput" GotFocus="ChangeEditProductErrorTxtVisibility_GotFocus"/>
+                <TextBlock x:Name="EditProductFormErrorTxt" Margin="5,0,5,0" Text="Обработка ошибок" Foreground="Red" Visibility="Collapsed"/>
+                <Button x:Name="EditProductFormBtn" Margin="5,5,0,5" Height="20" Width="70"  Content="Добавить" Background="{x:Null}" BorderBrush="#FF018DFF" Foreground="#FF1696FF" Click="EditProductFormBtn_Click"/>
+            </StackPanel>
+        </Border>
+
+        <DockPanel>
+            <!--Левая боковая панель-->
+            <Border DockPanel.Dock="Left" Width="280" Background="#FF4759E4">
+                <StackPanel Orientation="Vertical">
+                    <!--Лого с названием-->
+                    <StackPanel Orientation="Horizontal" Height="70">
+                        <Image Height="40" Width="40" Margin="20,0,0,0" Source="/Resources/MainLogo.png" Stretch="Fill"/>
+                        <TextBlock Text="SmartTrade" VerticalAlignment="Center" FontSize="24" FontFamily="Helvetica" Foreground="White" Margin="5,5,0,0"/>
+                    </StackPanel>
+                    <!--Главная-->
+                    <StackPanel>
+                        <Border x:Name="Home" Height="45" Width="270" CornerRadius="10" MouseLeftButtonDown="BordersChangeBgColor_MouseLeftButtonDown">
+                            <Border.Background>
+                                <StaticResource ResourceKey="GradientBrush" />
+                            </Border.Background>
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="25" Width="25" Margin="20,0,10,0" Source="/Resources/HomeIcon.png"/>
+                                <TextBlock Text="Главная" VerticalAlignment="Center" FontSize="17" Foreground="White" FontFamily="Helvetica" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                    <!--Заказы-->
+                    <StackPanel Margin="0,10,0,0">
+                        <Border x:Name="Orders" Height="45" Width="270" CornerRadius="10" MouseLeftButtonDown="BordersChangeBgColor_MouseLeftButtonDown">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="25" Width="25" Margin="20,0,10,0" Source="/Resources/TrolleyCart.png"/>
+                                <TextBlock Text="Заказы" VerticalAlignment="Center" FontSize="17" Foreground="White" FontFamily="Helvetica" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                    <!--Клиенты-->
+                    <StackPanel Margin="0,10,0,0">
+                        <Border x:Name="Clients" Height="45" Width="270" CornerRadius="10" MouseLeftButtonDown="BordersChangeBgColor_MouseLeftButtonDown" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="25" Width="25" Margin="20,0,10,0" Source="/Resources/Customers.png"/>
+                                <TextBlock Text="Клиенты" VerticalAlignment="Center" FontSize="17" Foreground="White" FontFamily="Helvetica" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                    <!--Товары-->
+                    <StackPanel Margin="0,10,0,0">
+                        <Border x:Name="Products" Height="45" Width="270" CornerRadius="10" MouseLeftButtonDown="BordersChangeBgColor_MouseLeftButtonDown" >
+                            <StackPanel Orientation="Horizontal">
+                                <Image Height="25" Width="25" Margin="20,0,10,0" Source="/Resources/Cube.png"/>
+                                <TextBlock Text="Товары" VerticalAlignment="Center" FontSize="17" Foreground="White" FontFamily="Helvetica" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!--Основное пространство-->
+            <TabControl x:Name="MenuControl">
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+
+                <!--Главная-->
+                <TabItem x:Name="HomeItem">
+                    <DockPanel Background="#FFF8FAFE">
+                        <!--Верхняя панель-->
+                        <Border Height="60" Background="White" DockPanel.Dock="Top" Panel.ZIndex="1">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Image Height="25" Width="25" HorizontalAlignment="Left" Source="/Resources/HomeIcon.png" Margin="10,0,0,0"/>
+                                <TextBlock Text="Главная" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17" FontFamily="Helvetica" Margin="45,5,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Подзаголовок-->
+                        <TextBlock DockPanel.Dock="Top" Text="Детали заказов" FontSize="24" FontWeight="Bold" FontFamily="Helvetica" Margin="20,20,0,0"/>
+
+                        <!--Карточки-->
+                        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="20,20,0,0" Panel.ZIndex="1">
+                            <Border Background="White" Height="80" Width="220" CornerRadius="10" VerticalAlignment="Center" Margin="0,0,25,0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Image Height="25" Width="25" HorizontalAlignment="Left" Margin="20,0,0,0" Source="/Resources/Cheque.png"/>
+                                    <TextBlock x:Name="AllOrdersPerDayTxt" Text="34" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Margin="50,18,0,0"/>
+                                    <TextBlock Text="Всего заказов" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="11" FontFamily="Helvetica" Margin="50,0,0,20" Foreground="#FFB3B3B3"/>
+                                </Grid>
+                            </Border>
+                            <Border Background="White" Height="80" Width="220" CornerRadius="10" VerticalAlignment="Center" Margin="0,0,25,0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Image Height="25" Width="25" HorizontalAlignment="Left" Margin="20,0,0,0" Source="/Resources/Cheque.png"/>
+                                    <TextBlock x:Name="AllOrdersTxt" Text="34" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Margin="50,18,0,0"/>
+                                    <TextBlock Text="Общее кол-во заказов" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="11" FontFamily="Helvetica" Margin="50,0,0,20" Foreground="#FFB3B3B3"/>
+                                </Grid>
+                            </Border>
+                            <Border Background="White" Height="80" Width="220" CornerRadius="10" VerticalAlignment="Center" Margin="0,0,25,0">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Image Height="25" Width="25" HorizontalAlignment="Left" Margin="20,0,0,0" Source="/Resources/Profit.png"/>
+                                    <TextBlock x:Name="WeeklyRevenueTxt" Text="1 200 000" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Margin="50,18,0,0"/>
+                                    <TextBlock Text="Еженедельная выручка" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="11" FontFamily="Helvetica" Margin="50,0,0,20" Foreground="#FFB3B3B3"/>
+                                </Grid>
+                            </Border>
+                            <Border Background="White" Height="80" Width="220" CornerRadius="10" VerticalAlignment="Center">
+                                <Border.Effect>
+                                    <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                                </Border.Effect>
+                                <Grid>
+                                    <Image Height="25" Width="25" HorizontalAlignment="Left" Margin="20,0,0,0" Source="/Resources/Profit.png"/>
+                                    <TextBlock x:Name="AnnualRevenueTxt"  Text="1 200 000" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="22" FontWeight="Bold" Margin="50,18,0,0"/>
+                                    <TextBlock Text="Годовая выручка" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="11" FontFamily="Helvetica" Margin="50,0,0,20" Foreground="#FFB3B3B3"/>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+
+                        <!--Последние заказы-->
+                        <Border Margin="20,10,0,0" Height="790" Width="590" Background="White" CornerRadius="10" DockPanel.Dock="Left">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                            </Border.Effect>
+                            <DockPanel>
+                                <!--Заголовок-->
+                                <StackPanel Orientation="Horizontal" Height="50" DockPanel.Dock="Top">
+                                    <TextBlock Text="Последние заказы" FontSize="20" FontWeight="Bold" FontFamily="Helvetica" VerticalAlignment="Center" Margin="10,5,0,0"/>
+                                </StackPanel>
+
+                                <DataGrid x:Name="LastOrdersDg" Margin="10,5,10,10" Background="{x:Null}" BorderBrush="#FF688CAF" AutoGenerateColumns="False" IsReadOnly="True">
+                                    <DataGrid.Columns>
+                                        <DataGridTextColumn Header="Код заказа" Binding="{Binding КодЗаказа}" Width="*"/>
+                                        <DataGridTextColumn Header="Код клиента" Binding="{Binding КодКлиента}" Width="*"/>
+                                        <DataGridTextColumn Header="Код товара" Binding="{Binding КодТовара}" Width="*"/>
+                                        <DataGridTextColumn Header="Количество" Binding="{Binding Количество}" Width="*"/>
+                                        <DataGridTextColumn Header="Дата покупки" Width="*">
+                                            <DataGridTextColumn.Binding>
+                                                <Binding Path="Дата_покупки" StringFormat="dd/MM/yyyy" />
+                                            </DataGridTextColumn.Binding>
+                                        </DataGridTextColumn>
+                                    </DataGrid.Columns>
+                                </DataGrid>
+                            </DockPanel>
+                        </Border>
+
+                        <!--График ежемесячной прибыли-->
+                        <Border Margin="0,20,0,0" Height="390" Width="350" Background="White" CornerRadius="10" DockPanel.Dock="Top">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                            </Border.Effect>
+                            <StackPanel Orientation="Vertical">
+                                <TextBlock HorizontalAlignment="Center" Text="Прибыль за месяц" FontWeight="Bold" FontSize="20" FontFamily="Helvetica" Margin="0,20,0,0"/>
+                                <s:WpfPlot x:Name="PlotProfit" Margin="0,30,0,0" Width="330" Height="300"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!--Календарь-->
+                        <Border Margin="0,60,0,0" Height="330" Width="350" Background="White" CornerRadius="10" DockPanel.Dock="Left">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                            </Border.Effect>
+                            <Calendar x:Name="SelectOrderDateCalendar" VerticalAlignment="Center" BorderBrush="{x:Null}" SelectedDatesChanged="SelectOrderDateCalendar_SelectedDatesChanged">
+                                <Calendar.LayoutTransform>
+                                    <TransformGroup>
+                                        <ScaleTransform ScaleX="1.7" ScaleY="1.7"/>
+                                        <SkewTransform/>
+                                        <RotateTransform/>
+                                        <TranslateTransform/>
+                                    </TransformGroup>
+                                </Calendar.LayoutTransform>
+                            </Calendar>
+                        </Border>
+                    </DockPanel>
+                </TabItem>
+
+                <!--Заказы-->
+                <TabItem x:Name="OrdersItem">
+                    <DockPanel Background="#FFF8FAFE">
+                        <!--Верхняя панель-->
+                        <Border Height="60" Background="White" DockPanel.Dock="Top" Panel.ZIndex="1">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Image Height="25" Width="25" HorizontalAlignment="Left" Source="/Resources/TrolleyCart.png" Margin="10,0,0,0"/>
+                                <TextBlock Text="Заказы" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17" FontFamily="Helvetica" Margin="45,5,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Подпанель-->
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="10,20,0,0">
+                            <TextBlock Text="Заказы" FontSize="24" FontWeight="Bold" FontFamily="Helvetica"/>
+                            <Button x:Name="AddOrderBtn" Height="20" Width="70" Background="{x:Null}" BorderBrush="#FF4759E4" Content="Добавить" Foreground="#FF4759E4" Margin="20,0,10,0" Click="AddOrderBtn_Click"/>
+                            <TextBox x:Name="FindOrderBx" Height="20" Width="130" Margin="0,0,5,0" Text="Введите код заказа" Foreground="Gray" GotFocus="ClearTextBox_GotFocus" PreviewTextInput="OnlyNumbers_PreviewTextInput"/>
+                            <Button x:Name="FindOrderBtn" Height="20" Width="50" Background="{x:Null}" BorderBrush="#FFB63CE6" Content="Найти" Foreground="#FFB63CE6" Margin="0,0,10,0" Click="FindOrderBtn_Click"/>
+                            <Button x:Name="EditOrderBtn" Height="20" Width="100" Background="{x:Null}" BorderBrush="#FF6E9C5D" Content="Редактировать" Foreground="#FF6E9C5D" Click="EditOrderBtn_Click"/>
+                            <TextBlock Text="Товары" FontSize="24" FontWeight="Bold" FontFamily="Helvetica" Margin="90,0,0,0"/>
+                            <Button x:Name="UpdateProductsDgBtn" Height="20" Width="70" Background="{x:Null}" BorderBrush="#FFF7B53B" Content="Обновить" Foreground="#FFF7B53B" Margin="10,0,0,0" Click="UpdateProductsDgBtn_Click"/>
+                        </StackPanel>
+
+                        <DataGrid x:Name="OrdersDg" Margin="10" Background="White" IsReadOnly="True" DockPanel.Dock="Left" Width="550" AutoGenerateColumns="False" MouseRightButtonDown="OrdersDg_MouseRightButtonDown">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Код заказа" Binding="{Binding КодЗаказа}" Width="*"/>
+                                <DataGridTextColumn Header="Код клиента" Binding="{Binding КодКлиента}" Width="*"/>
+                                <DataGridTextColumn Header="Код товара" Binding="{Binding КодТовара}" Width="*"/>
+                                <DataGridTextColumn Header="Количество" Binding="{Binding Количество}" Width="*"/>
+                                <DataGridTextColumn Header="Дата покупки" Width="*">
+                                    <DataGridTextColumn.Binding>
+                                        <Binding Path="Дата_покупки" StringFormat="dd/MM/yyyy" />
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <DataGrid x:Name="OrdersProductsDg" Margin="10" Background="White" IsReadOnly="True" DockPanel.Dock="Right" AutoGenerateColumns="False">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Код товара" Binding="{Binding КодТовара}" Width="*"/>
+                                <DataGridTextColumn Header="Наименование" Binding="{Binding Наименование}" Width="*"/>
+                                <DataGridTextColumn Header="Цена" Binding="{Binding Цена}" Width="*"/>
+                                <DataGridTextColumn Header="На складе" Binding="{Binding НаСкладе}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+
+                <!--Клиенты-->
+                <TabItem x:Name="ClientsItem">
+                    <DockPanel Background="#FFF8FAFE">
+                        <!--Верхняя панель-->
+                        <Border Height="60" Background="White" DockPanel.Dock="Top" Panel.ZIndex="1">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Image Height="25" Width="25" HorizontalAlignment="Left" Source="/Resources/Customers.png" Margin="10,0,0,0"/>
+                                <TextBlock Text="Клиенты" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17" FontFamily="Helvetica" Margin="45,5,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Подпанель-->
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="10,20,0,0">
+                            <TextBlock Text="Клиенты" FontSize="24" FontWeight="Bold" FontFamily="Helvetica"/>
+                            <Button x:Name="AddClientBtn" Height="20" Width="70" Background="{x:Null}" BorderBrush="#FF4759E4" Content="Добавить" Foreground="#FF4759E4" Margin="20,0,10,0" Click="AddClientBtn_Click"/>
+                            <TextBox x:Name="FindClientBx" Height="20" Width="130" Margin="0,0,5,0" Text="Введите код клиента" Foreground="Gray" GotFocus="ClearTextBox_GotFocus" PreviewTextInput="OnlyNumbers_PreviewTextInput"/>
+                            <Button x:Name="FindClientBtn" Height="20" Width="50" Background="{x:Null}" BorderBrush="#FFB63CE6" Content="Найти" Foreground="#FFB63CE6" Margin="0,0,10,0" Click="FindClientBtn_Click"/>
+                            <Button x:Name="EditClientBtn" Height="20" Width="100" Background="{x:Null}" BorderBrush="#FF6E9C5D" Content="Редактировать" Foreground="#FF6E9C5D" Click="EditClientBtn_Click"/>
+                        </StackPanel>
+
+                        <DataGrid x:Name="ClientsDg" Margin="10" Background="White" IsReadOnly="True" DockPanel.Dock="Left" AutoGenerateColumns="False" MouseRightButtonDown="ClientsDg_MouseRightButtonDown">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Код клиента" Binding="{Binding КодКлиента}" Width="*"/>
+                                <DataGridTextColumn Header="Фамилия" Binding="{Binding Фамилия}" Width="*"/>
+                                <DataGridTextColumn Header="Адрес" Binding="{Binding Адрес}" Width="*"/>
+                                <DataGridTextColumn Header="Телефон" Binding="{Binding Телефон}" Width="*"/>
+                                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+
+                <!--Товары-->
+                <TabItem x:Name="ProductsItem">
+                    <DockPanel Background="#FFF8FAFE">
+                        <!--Верхняя панель-->
+                        <Border Height="60" Background="White" DockPanel.Dock="Top" Panel.ZIndex="1">
+                            <Border.Effect>
+                                <DropShadowEffect Color="Black" Direction="260" ShadowDepth="5" Opacity="0.2"/>
+                            </Border.Effect>
+                            <Grid>
+                                <Image Height="25" Width="25" HorizontalAlignment="Left" Source="/Resources/Cube.png" Margin="10,0,0,0"/>
+                                <TextBlock Text="Товары" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="17" FontFamily="Helvetica" Margin="45,5,0,0"/>
+                            </Grid>
+                        </Border>
+
+                        <!--Подпанель-->
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top" Margin="10,20,0,0">
+                            <TextBlock Text="Товары" FontSize="24" FontWeight="Bold" FontFamily="Helvetica"/>
+                            <Button x:Name="AddProductBtn" Height="20" Width="70" Background="{x:Null}" BorderBrush="#FF4759E4" Content="Добавить" Foreground="#FF4759E4" Margin="20,0,10,0" Click="AddProductBtn_Click"/>
+                            <TextBox x:Name="FindProductBx" Height="20" Width="130" Margin="0,0,5,0" Text="Введите код товара" Foreground="Gray" GotFocus="ClearTextBox_GotFocus" PreviewTextInput="OnlyNumbers_PreviewTextInput"/>
+                            <Button x:Name="FindProductBtn" Height="20" Width="50" Background="{x:Null}" BorderBrush="#FFB63CE6" Content="Найти" Foreground="#FFB63CE6" Margin="0,0,10,0" Click="FindProductBtn_Click"/>
+                            <Button x:Name="EditProductBtn" Height="20" Width="100" Background="{x:Null}" BorderBrush="#FF6E9C5D" Content="Редактировать" Foreground="#FF6E9C5D" Click="EditProductBtn_Click"/>
+                        </StackPanel>
+
+                        <DataGrid x:Name="ProductsDg" Margin="10" Background="White" IsReadOnly="True" DockPanel.Dock="Left" AutoGenerateColumns="False" MouseRightButtonDown="ProductsDg_MouseRightButtonDown">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Код товара" Binding="{Binding КодТовара}" Width="*"/>
+                                <DataGridTextColumn Header="Наименование" Binding="{Binding Наименование}" Width="*"/>
+                                <DataGridTextColumn Header="Цена" Binding="{Binding Цена}" Width="*"/>
+                                <DataGridTextColumn Header="На складе" Binding="{Binding НаСкладе}" Width="*"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</Window>
